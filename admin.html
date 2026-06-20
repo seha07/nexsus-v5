@@ -1,89 +1,389 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-content="width=device-width,initial-scale=1">
-
-<title>Nexus V5 Admin</title>
+<title>Nexus V5 Ultimate Admin</title>
 
 <link rel="stylesheet" href="admin.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
 
 <body>
 
-<div class="sidebar">
+<div class="layout">
 
-<h2>NEXUS V5</h2>
+    <!-- SIDEBAR -->
 
-<button onclick="showTab('dashboard')">
-Dashboard
-</button>
+    <aside class="sidebar">
 
-<button onclick="showTab('users')">
-Kullanıcılar
-</button>
+        <div class="logo">
 
-<button onclick="showTab('logs')">
-Loglar
-</button>
+            <div class="logo-icon">N</div>
 
-</div>
+            <div>
+                <h2>NEXUS V5</h2>
+                <span>Ultimate Admin</span>
+            </div>
 
-<div class="content">
+        </div>
 
-<div id="dashboard"
-class="tab active">
+        <nav>
 
-<h1>Dashboard</h1>
+            <button class="menu-btn active"
+                    onclick="showSection('dashboard')">
 
-<div class="card">
+                📊 Dashboard
 
-Toplam Kullanıcı:
+            </button>
 
-<span id="totalUsers">
-0
-</span>
+            <button class="menu-btn"
+                    onclick="showSection('users')">
 
-</div>
+                👥 Kullanıcılar
 
-</div>
+            </button>
 
-<div id="users"
-class="tab">
+            <button class="menu-btn"
+                    onclick="showSection('coins')">
 
-<input
-id="searchUser"
-placeholder="Kullanıcı Ara"
-onkeyup="renderUsers()">
+                💰 Coin Yönetimi
 
-<table>
+            </button>
 
-<tbody id="userTable">
+            <button class="menu-btn"
+                    onclick="showSection('spins')">
 
-</tbody>
+                🎡 Spin Yönetimi
 
-</table>
+            </button>
 
-</div>
+            <button class="menu-btn"
+                    onclick="showSection('tasks')">
 
-<div id="logs"
-class="tab">
+                ⚡ Görevler
 
-<div id="logList">
+            </button>
 
-</div>
+            <button class="menu-btn"
+                    onclick="showSection('notifications')">
 
-</div>
+                📢 Bildirimler
+
+            </button>
+
+            <button class="menu-btn"
+                    onclick="showSection('logs')">
+
+                📜 Log Merkezi
+
+            </button>
+
+            <button class="menu-btn"
+                    onclick="showSection('settings')">
+
+                ⚙️ Ayarlar
+
+            </button>
+
+        </nav>
+
+        <button
+            class="logout-btn"
+            onclick="logout()">
+
+            🚪 Çıkış
+
+        </button>
+
+    </aside>
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1 id="pageTitle">
+
+                    Dashboard
+
+                </h1>
+
+                <p>
+                    Nexus Yönetim Merkezi
+                </p>
+
+            </div>
+
+            <div class="admin-box">
+
+                <div class="avatar">
+
+                    A
+
+                </div>
+
+                <div>
+
+                    <strong>Admin</strong>
+                    <small>Ultimate Access</small>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- DASHBOARD -->
+
+        <section id="dashboard"
+                 class="section active">
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <span>👥</span>
+
+                    <h3 id="totalUsers">
+
+                        0
+
+                    </h3>
+
+                    <p>Toplam Kullanıcı</p>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <span>💰</span>
+
+                    <h3 id="totalCoins">
+
+                        0
+
+                    </h3>
+
+                    <p>Toplam Coin</p>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <span>🎡</span>
+
+                    <h3 id="totalSpins">
+
+                        0
+
+                    </h3>
+
+                    <p>Toplam Spin</p>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <span>⚡</span>
+
+                    <h3 id="todayLogins">
+
+                        0
+
+                    </h3>
+
+                    <p>Bugünkü Giriş</p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- USERS -->
+
+        <section id="users"
+                 class="section">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h2>Kullanıcı Yönetimi</h2>
+
+                    <input
+                        type="text"
+                        id="userSearch"
+                        placeholder="Kullanıcı Ara..."
+                        onkeyup="renderUsers()">
+
+                </div>
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Kullanıcı</th>
+                        <th>Coin</th>
+                        <th>Spin</th>
+                        <th>Durum</th>
+                        <th>İşlem</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="userTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <!-- COINS -->
+
+        <section id="coins"
+                 class="section">
+
+            <div class="card">
+
+                <h2>Coin Yönetimi</h2>
+
+                <p>
+
+                    Kullanıcılara coin ekle,
+                    coin düş veya hareketleri görüntüle.
+
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- SPINS -->
+
+        <section id="spins"
+                 class="section">
+
+            <div class="card">
+
+                <h2>Spin Yönetimi</h2>
+
+                <p>
+
+                    Kullanıcı spin haklarını yönet.
+
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- TASKS -->
+
+        <section id="tasks"
+                 class="section">
+
+            <div class="card">
+
+                <h2>Görev Yönetimi</h2>
+
+                <p>
+
+                    Günlük görev oluştur ve düzenle.
+
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- NOTIFICATIONS -->
+
+        <section id="notifications"
+                 class="section">
+
+            <div class="card">
+
+                <h2>Bildirim Merkezi</h2>
+
+                <textarea
+                    id="notificationText"
+                    placeholder="Bildirim yaz..."
+                    rows="5"></textarea>
+
+                <button
+                    class="primary-btn"
+                    onclick="sendNotification()">
+
+                    Gönder
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- LOGS -->
+
+        <section id="logs"
+                 class="section">
+
+            <div class="card">
+
+                <h2>Log Merkezi</h2>
+
+                <div id="logContainer">
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- SETTINGS -->
+
+        <section id="settings"
+                 class="section">
+
+            <div class="card">
+
+                <h2>Sistem Ayarları</h2>
+
+                <p>
+
+                    Nexus V5 Ultimate
+
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
 
 </div>
 
 <script src="admin.js"></script>
 
 </body>
-
 </html>
