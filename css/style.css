@@ -1,0 +1,29 @@
+body {
+    background-color: #081224;
+    color: white;
+    font-family: system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.nexus-card {
+    background-color: #162238;
+    border: 1px solid #1e293b;
+}
+.btn-primary {
+    background-color: #2563eb;
+    color: white;
+    transition: all 0.2s;
+}
+.btn-primary:hover { background-color: #1d4ed8; }
+.btn-danger {
+    background-color: #dc2626;
+    color: white;
+    transition: all 0.2s;
+}
+.btn-danger:hover { background-color: #b91c1c; }
+.btn-success {
+    background-color: #16a34a;
+    color: white;
+    transition: all 0.2s;
+}
+.btn-success:hover { background-color: #15803d; }
