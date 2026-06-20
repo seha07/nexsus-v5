@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - 3x4 Dynamic Slots</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        body { background-color: #030712; color: #f3f4f6; font-family: sans-serif; }
+        .nexus-card { background: #0b0f19; border: 1px solid #1e293b; }
+    </style>
+</head>
+<body>
+
+    <header class="h-20 nexus-card border-b flex items-center justify-between px-8">
+        <button onclick="window.location.href='dashboard.html'" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-xs font-bold">⬅️ Lobiye Dön</button>
+        <div class="bg-gray-950 border border-gray-800 px-4 py-2 rounded-xl text-yellow-400 font-bold font-mono text-sm" id="slot-coins">0 🪙</div>
+    </header>
+
+    <div class="p-6 max-w-2xl mx-auto w-full space-y-6">
+        <div class="nexus-card rounded-2xl p-6 text-center">
+            <h2 class="text-sm font-black text-yellow-500 tracking-widest mb-4">🎰 DYNAMIC SLOT MATRIX (3x4 MATRIX - %40 RTP)</h2>
+            
+            <div class="grid grid-cols-3 gap-2 mb-6">
+                <button onclick="setTheme('classic')" id="btn-t1" class="py-2 rounded-xl text-xs font-bold bg-blue-600 text-white">CLASSIC</button>
+                <button onclick="setTheme('candy')" id="btn-t2" class="py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-400">CANDY SUITE</button>
+                <button onclick="setTheme('diamond')" id="btn-t3" class="py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-400">DIAMOND HIGH</button>
+            </div>
+
+            <div class="grid grid-cols-4 gap-3 bg-gray-950 p-6 rounded-2xl border border-gray-800 justify-items-center mb-6" id="slot-grid"></div>
+
+            <p id="slot-alert" class="text-xs font-bold text-blue-400 h-4 mb-4"></p>
+            <button onclick="spinSlots()" id="spin-btn" class="w-full py-4 bg-yellow-500 hover:bg-yellow-400 text-gray-950 font-black rounded-xl text-sm tracking-widest">BET ÇEVİR</button>
+        </div>
+    </div>
+
+    <script>
+        const session = localStorage.getItem('nexus_session');
+        let users = JSON.parse(localStorage.getItem('nexus_users')) || [];
+        let curr = users.find(u => u.username === session);
+
+        const themes = {
+            classic: ['🍒', '🍋', '🍇', '🍉', '🔔', '7️⃣'],
+            candy: ['🍭', '🍬', '🍫', '🍩', '🍪', '🧁'],
+            diamond: ['💎', '👑', '💍', '💵', '💰', '🌟']
+        };
+        let activeTheme = 'classic';
+
+        function setTheme(t) {
+            activeTheme = t;
+            document.getElementById('btn-t1').className = t === 'classic' ? 'py-2 rounded-xl text-xs font-bold bg-blue-600 text-white' : 'py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-400';
+            document.getElementById('btn-t2').className = t === 'candy' ? 'py-2 rounded-xl text-xs font-bold bg-blue-600 text-white' : 'py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-400';
+            document.getElementById('btn-t3').className = t === 'diamond' ? 'py-2 rounded-xl text-xs font-bold bg-blue-600 text-white' : 'py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-400';
+            initGrid();
+        }
+
+        function initGrid() {
+            const grid = document.getElementById('slot-grid');
+            grid.innerHTML = '';
+            for(let i=0; i<12; i++) {
+                grid.innerHTML += `<div class="w-14 h-14 bg-gray-900 border border-gray-800 rounded-xl flex items-center justify-center text-xl font-bold">${themes[activeTheme][0]}</div>`;
+            }
+            let currentBet = parseInt(localStorage.getItem('nexus_current_bet')) || 100;
+            document.getElementById('spin-btn').innerText = `BET ÇEVİR (${currentBet} COIN)`;
+            document.getElementById('slot-coins').innerText = curr.coins.toLocaleString() + " 🪙";
+        }
+
+        function spinSlots() {
+            // ADMIN YASAKLAMA KONTROLÜ
+            if(curr.betDisabled === true) { alert("❌ Bahis yapma yetkiniz admin tarafından askıya alınmıştır!"); return; }
+
+            let currentBet = parseInt(localStorage.getItem('nexus_current_bet')) || 100;
+            if(curr.coins < currentBet) { alert("Yetersiz Bakiye!"); return; }
+            
+            curr.coins -= currentBet;
+            document.getElementById('slot-coins').innerText = curr.coins.toLocaleString() + " 🪙";
+            document.getElementById('slot-alert').innerText = "Makaralar dönüyor...";
+
+            const isWin = Math.random() < 0.40; 
+            const pool = themes[activeTheme];
+
+            setTimeout(() => {
+                const grid = document.getElementById('slot-grid');
+                grid.innerHTML = '';
+                let generated = [];
+                let payout = -currentBet;
+
+                if(isWin) {
+                    let luckySymbol = pool[Math.floor(Math.random() * pool.length)];
+                    for(let i=0; i<12; i++) {
+                        let sym = Math.random() > 0.4 ? luckySymbol : pool[Math.floor(Math.random() * pool.length)];
+                        generated.push(sym);
+                    }
+                    let winAmount = currentBet * 3.5;
+                    curr.coins += winAmount;
+                    payout = winAmount - currentBet;
+                    document.getElementById('slot-alert').innerText = `🎉 KAZANDINIZ! +${winAmount} COIN (%40 RTP Tetiklendi)`;
+                } else {
+                    for(let i=0; i<12; i++) { generated.push(pool[Math.floor(Math.random() * pool.length)]); }
+                    document.getElementById('slot-alert').innerText = "❌ Kazanç Yok. Tekrar Deneyin.";
+                }
+
+                let history = JSON.parse(localStorage.getItem('nexus_bet_history')) || [];
+                history.unshift({
+                    time: new Date().toLocaleTimeString(),
+                    user: curr.username,
+                    game: `Slot (${activeTheme.toUpperCase()})`,
+                    bet: currentBet,
+                    payout: payout
+                });
+                localStorage.setItem('nexus_bet_history', JSON.stringify(history));
+
+                grid.innerHTML = generated.map(s => `<div class="w-14 h-14 bg-gray-900 border border-gray-800 rounded-xl flex items-center justify-center text-xl font-bold">${s}</div>`).join('');
+                
+                let idx = users.findIndex(u => u.username === curr.username);
+                users[idx] = curr;
+                localStorage.setItem('nexus_users', JSON.stringify(users));
+                document.getElementById('slot-coins').innerText = curr.coins.toLocaleString() + " 🪙";
+            }, 350);
+        }
+
+        initGrid();
+    </script>
+</body>
+</html>
