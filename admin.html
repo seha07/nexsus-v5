@@ -1,145 +1,132 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Nexus V5 Ultimate Admin</title>
+<title>Nexus V6 Ultimate Admin</title>
 
-<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="css/admin.css">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
 
 <body>
 
-<div class="layout">
+<div class="admin-container">
 
     <!-- SIDEBAR -->
 
     <aside class="sidebar">
 
         <div class="logo">
-
-            <div class="logo-icon">N</div>
-
-            <div>
-                <h2>NEXUS V5</h2>
-                <span>Ultimate Admin</span>
-            </div>
-
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>NEXUS V6</span>
         </div>
 
         <nav>
 
-            <button class="menu-btn active"
-                    onclick="showSection('dashboard')">
-
-                📊 Dashboard
-
+            <button class="nav-btn active"
+            onclick="showTab('dashboard')">
+                <i class="fa-solid fa-chart-line"></i>
+                Dashboard
             </button>
 
-            <button class="menu-btn"
-                    onclick="showSection('users')">
-
-                👥 Kullanıcılar
-
+            <button class="nav-btn"
+            onclick="showTab('users')">
+                <i class="fa-solid fa-users"></i>
+                Kullanıcılar
             </button>
 
-            <button class="menu-btn"
-                    onclick="showSection('coins')">
-
-                💰 Coin Yönetimi
-
+            <button class="nav-btn"
+            onclick="showTab('coin')">
+                <i class="fa-solid fa-coins"></i>
+                Coin Yönetimi
             </button>
 
-            <button class="menu-btn"
-                    onclick="showSection('spins')">
-
-                🎡 Spin Yönetimi
-
+            <button class="nav-btn"
+            onclick="showTab('spin')">
+                <i class="fa-solid fa-dharmachakra"></i>
+                Spin Yönetimi
             </button>
 
-            <button class="menu-btn"
-                    onclick="showSection('tasks')">
-
-                ⚡ Görevler
-
+            <button class="nav-btn"
+            onclick="showTab('bonus')">
+                <i class="fa-solid fa-gift"></i>
+                Bonus Sistemi
             </button>
 
-            <button class="menu-btn"
-                    onclick="showSection('notifications')">
-
-                📢 Bildirimler
-
+            <button class="nav-btn"
+            onclick="showTab('tasks')">
+                <i class="fa-solid fa-list-check"></i>
+                Görev Sistemi
             </button>
 
-            <button class="menu-btn"
-                    onclick="showSection('logs')">
-
-                📜 Log Merkezi
-
+            <button class="nav-btn"
+            onclick="showTab('notifications')">
+                <i class="fa-solid fa-bell"></i>
+                Bildirimler
             </button>
 
-            <button class="menu-btn"
-                    onclick="showSection('settings')">
+            <button class="nav-btn"
+            onclick="showTab('logs')">
+                <i class="fa-solid fa-scroll"></i>
+                Log Merkezi
+            </button>
 
-                ⚙️ Ayarlar
+            <button class="nav-btn"
+            onclick="showTab('sessions')">
+                <i class="fa-solid fa-globe"></i>
+                Aktif Oturumlar
+            </button>
 
+            <button class="nav-btn"
+            onclick="showTab('security')">
+                <i class="fa-solid fa-lock"></i>
+                Güvenlik
+            </button>
+
+            <button class="nav-btn"
+            onclick="showTab('settings')">
+                <i class="fa-solid fa-gear"></i>
+                Sistem Ayarları
             </button>
 
         </nav>
 
-        <button
-            class="logout-btn"
-            onclick="logout()">
+        <div class="sidebar-bottom">
 
-            🚪 Çıkış
+            <button class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Çıkış Yap
+            </button>
 
-        </button>
+        </div>
 
     </aside>
 
     <!-- MAIN -->
 
-    <main class="main">
+    <main class="main-content">
 
         <!-- TOPBAR -->
 
         <header class="topbar">
 
-            <div>
-
-                <h1 id="pageTitle">
-
-                    Dashboard
-
-                </h1>
-
-                <p>
-                    Nexus Yönetim Merkezi
-                </p>
-
+            <div class="page-title">
+                Nexus Ultimate Control Center
             </div>
 
-            <div class="admin-box">
+            <div class="topbar-right">
 
-                <div class="avatar">
-
-                    A
-
-                </div>
-
-                <div>
-
-                    <strong>Admin</strong>
-                    <small>Ultimate Access</small>
-
+                <div class="admin-info">
+                    <i class="fa-solid fa-user-shield"></i>
+                    Admin
                 </div>
 
             </div>
@@ -148,65 +135,44 @@
 
         <!-- DASHBOARD -->
 
-        <section id="dashboard"
-                 class="section active">
+        <section id="dashboard" class="tab active">
 
             <div class="stats-grid">
 
                 <div class="stat-card">
-
-                    <span>👥</span>
-
-                    <h3 id="totalUsers">
-
-                        0
-
-                    </h3>
-
+                    <i class="fa-solid fa-users"></i>
+                    <h3>15.244</h3>
                     <p>Toplam Kullanıcı</p>
-
                 </div>
 
                 <div class="stat-card">
+                    <i class="fa-solid fa-user-check"></i>
+                    <h3>1.253</h3>
+                    <p>Aktif Kullanıcı</p>
+                </div>
 
-                    <span>💰</span>
-
-                    <h3 id="totalCoins">
-
-                        0
-
-                    </h3>
-
+                <div class="stat-card">
+                    <i class="fa-solid fa-coins"></i>
+                    <h3>15.822.100</h3>
                     <p>Toplam Coin</p>
-
                 </div>
 
                 <div class="stat-card">
-
-                    <span>🎡</span>
-
-                    <h3 id="totalSpins">
-
-                        0
-
-                    </h3>
-
+                    <i class="fa-solid fa-dharmachakra"></i>
+                    <h3>9.152</h3>
                     <p>Toplam Spin</p>
-
                 </div>
 
                 <div class="stat-card">
-
-                    <span>⚡</span>
-
-                    <h3 id="todayLogins">
-
-                        0
-
-                    </h3>
-
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <h3>438</h3>
                     <p>Bugünkü Giriş</p>
+                </div>
 
+                <div class="stat-card">
+                    <i class="fa-solid fa-circle"></i>
+                    <h3>92</h3>
+                    <p>Online</p>
                 </div>
 
             </div>
@@ -215,20 +181,24 @@
 
         <!-- USERS -->
 
-        <section id="users"
-                 class="section">
+        <section id="users" class="tab">
 
-            <div class="card">
+            <div class="panel">
 
-                <div class="card-header">
-
+                <div class="panel-header">
                     <h2>Kullanıcı Yönetimi</h2>
+                </div>
+
+                <div class="search-bar">
 
                     <input
-                        type="text"
-                        id="userSearch"
-                        placeholder="Kullanıcı Ara..."
-                        onkeyup="renderUsers()">
+                    type="text"
+                    placeholder="ID, kullanıcı adı veya IP ara">
+
+                    <button>
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Ara
+                    </button>
 
                 </div>
 
@@ -236,20 +206,18 @@
 
                     <thead>
 
-                    <tr>
-
-                        <th>ID</th>
-                        <th>Kullanıcı</th>
-                        <th>Coin</th>
-                        <th>Spin</th>
-                        <th>Durum</th>
-                        <th>İşlem</th>
-
-                    </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Kullanıcı</th>
+                            <th>Coin</th>
+                            <th>Spin</th>
+                            <th>IP</th>
+                            <th>İşlem</th>
+                        </tr>
 
                     </thead>
 
-                    <tbody id="userTable">
+                    <tbody id="usersTable">
 
                     </tbody>
 
@@ -259,40 +227,61 @@
 
         </section>
 
-        <!-- COINS -->
+        <!-- COIN -->
 
-        <section id="coins"
-                 class="section">
+        <section id="coin" class="tab">
 
-            <div class="card">
+            <div class="panel">
 
                 <h2>Coin Yönetimi</h2>
 
-                <p>
+                <div class="admin-actions">
 
-                    Kullanıcılara coin ekle,
-                    coin düş veya hareketleri görüntüle.
+                    <button class="success-btn">
+                        + Coin Ver
+                    </button>
 
-                </p>
+                    <button class="danger-btn">
+                        - Coin Sil
+                    </button>
+
+                </div>
 
             </div>
 
         </section>
 
-        <!-- SPINS -->
+        <!-- SPIN -->
 
-        <section id="spins"
-                 class="section">
+        <section id="spin" class="tab">
 
-            <div class="card">
+            <div class="panel">
 
                 <h2>Spin Yönetimi</h2>
 
-                <p>
+                <div class="admin-actions">
 
-                    Kullanıcı spin haklarını yönet.
+                    <button class="success-btn">
+                        + Spin Ver
+                    </button>
 
-                </p>
+                    <button class="danger-btn">
+                        - Spin Sil
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- BONUS -->
+
+        <section id="bonus" class="tab">
+
+            <div class="panel">
+
+                <h2>Bonus Sistemi</h2>
 
             </div>
 
@@ -300,18 +289,11 @@
 
         <!-- TASKS -->
 
-        <section id="tasks"
-                 class="section">
+        <section id="tasks" class="tab">
 
-            <div class="card">
+            <div class="panel">
 
-                <h2>Görev Yönetimi</h2>
-
-                <p>
-
-                    Günlük görev oluştur ve düzenle.
-
-                </p>
+                <h2>Görev Sistemi</h2>
 
             </div>
 
@@ -319,25 +301,11 @@
 
         <!-- NOTIFICATIONS -->
 
-        <section id="notifications"
-                 class="section">
+        <section id="notifications" class="tab">
 
-            <div class="card">
+            <div class="panel">
 
                 <h2>Bildirim Merkezi</h2>
-
-                <textarea
-                    id="notificationText"
-                    placeholder="Bildirim yaz..."
-                    rows="5"></textarea>
-
-                <button
-                    class="primary-btn"
-                    onclick="sendNotification()">
-
-                    Gönder
-
-                </button>
 
             </div>
 
@@ -345,14 +313,77 @@
 
         <!-- LOGS -->
 
-        <section id="logs"
-                 class="section">
+        <section id="logs" class="tab">
 
-            <div class="card">
+            <div class="panel">
 
                 <h2>Log Merkezi</h2>
 
-                <div id="logContainer">
+                <div id="logsContainer">
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- SESSIONS -->
+
+        <section id="sessions" class="tab">
+
+            <div class="panel">
+
+                <h2>Aktif Oturumlar</h2>
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+                        <th>Kullanıcı</th>
+                        <th>IP</th>
+                        <th>Ülke</th>
+                        <th>Tarayıcı</th>
+                        <th>Aktiflik</th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="sessionTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <!-- SECURITY -->
+
+        <section id="security" class="tab">
+
+            <div class="panel">
+
+                <h2>Güvenlik Merkezi</h2>
+
+                <div class="security-grid">
+
+                    <div class="security-card">
+                        Banlı IP
+                    </div>
+
+                    <div class="security-card">
+                        Şüpheli Girişler
+                    </div>
+
+                    <div class="security-card">
+                        Çoklu Hesaplar
+                    </div>
+
+                    <div class="security-card">
+                        Banlı Kullanıcılar
+                    </div>
 
                 </div>
 
@@ -362,18 +393,15 @@
 
         <!-- SETTINGS -->
 
-        <section id="settings"
-                 class="section">
+        <section id="settings" class="tab">
 
-            <div class="card">
+            <div class="panel">
 
                 <h2>Sistem Ayarları</h2>
 
-                <p>
-
-                    Nexus V5 Ultimate
-
-                </p>
+                <button class="save-btn">
+                    Ayarları Kaydet
+                </button>
 
             </div>
 
@@ -383,7 +411,7 @@
 
 </div>
 
-<script src="admin.js"></script>
+<script src="js/admin.js"></script>
 
 </body>
 </html>
