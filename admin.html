@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>Nexus V5 Admin</title>
+
+<link rel="stylesheet" href="admin.css">
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>NEXUS V5</h2>
+
+<button onclick="showTab('dashboard')">
+Dashboard
+</button>
+
+<button onclick="showTab('users')">
+Kullanıcılar
+</button>
+
+<button onclick="showTab('logs')">
+Loglar
+</button>
+
+</div>
+
+<div class="content">
+
+<div id="dashboard"
+class="tab active">
+
+<h1>Dashboard</h1>
+
+<div class="card">
+
+Toplam Kullanıcı:
+
+<span id="totalUsers">
+0
+</span>
+
+</div>
+
+</div>
+
+<div id="users"
+class="tab">
+
+<input
+id="searchUser"
+placeholder="Kullanıcı Ara"
+onkeyup="renderUsers()">
+
+<table>
+
+<tbody id="userTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+<div id="logs"
+class="tab">
+
+<div id="logList">
+
+</div>
+
+</div>
+
+</div>
+
+<script src="admin.js"></script>
+
+</body>
+
+</html>
