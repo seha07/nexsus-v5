@@ -1,530 +1,549 @@
-/* ==========================
-   NEXUS V5 ULTIMATE ADMIN
-========================== */
+// ===============================
+// NEXUS V6 ULTIMATE ADMIN
+// ===============================
 
-let users = [];
-let logs = [];
-let notifications = [];
+let users = JSON.parse(
+localStorage.getItem("users")
+) || [];
 
-/* ==========================
-   LOAD DATA
-========================== */
+let logs = JSON.parse(
+localStorage.getItem("adminLogs")
+) || [];
 
-function loadData(){
+// ===============================
+// TAB SYSTEM
+// ===============================
 
-    try{
+function showTab(tabId){
 
-        users =
-        JSON.parse(
-            localStorage.getItem("nexus_users")
-        ) || [];
+document
+.querySelectorAll(".tab")
+.forEach(tab=>{
 
-    }catch{
+tab.classList.remove("active");
 
-        users=[];
+});
 
-    }
+document
+.getElementById(tabId)
+.classList.add("active");
 
-    try{
+document
+.querySelectorAll(".nav-btn")
+.forEach(btn=>{
 
-        logs =
-        JSON.parse(
-            localStorage.getItem("nexus_logs")
-        ) || [];
+btn.classList.remove("active");
 
-    }catch{
+});
 
-        logs=[];
-
-    }
-
-    try{
-
-        notifications =
-        JSON.parse(
-            localStorage.getItem("nexus_notifications")
-        ) || [];
-
-    }catch{
-
-        notifications=[];
-
-    }
+event.target.classList.add("active");
 
 }
 
-/* ==========================
-   SAVE DATA
-========================== */
+// ===============================
+// TOAST
+// ===============================
+
+function toast(message){
+
+const toast =
+document.createElement("div");
+
+toast.className = "toast";
+
+toast.innerText = message;
+
+toast.style.position = "fixed";
+toast.style.top = "20px";
+toast.style.right = "20px";
+
+toast.style.background = "#3b82f6";
+toast.style.color = "#fff";
+
+toast.style.padding = "14px 20px";
+
+toast.style.borderRadius = "12px";
+
+toast.style.zIndex = "9999";
+
+document.body.appendChild(toast);
+
+setTimeout(()=>{
+
+toast.remove();
+
+},3000);
+
+}
+
+// ===============================
+// USERS
+// ===============================
+
+function loadUsers(){
+
+const table =
+document.getElementById(
+"usersTable"
+);
+
+if(!table) return;
+
+table.innerHTML = "";
+
+users.forEach(user=>{
+
+table.innerHTML += `
+
+<tr>
+
+<td>${user.id || "-"}</td>
+
+<td>${user.username}</td>
+
+<td>${user.balance || 0}</td>
+
+<td>${user.spins || 0}</td>
+
+<td>${user.ip || "127.0.0.1"}</td>
+
+<td>
+
+<button
+onclick="openUser(${user.id})">
+
+Yönet
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+// ===============================
+// SEARCH
+// ===============================
+
+function searchUsers(){
+
+const input =
+document
+.querySelector(".search-bar input");
+
+if(!input) return;
+
+const value =
+input.value.toLowerCase();
+
+const table =
+document.getElementById(
+"usersTable"
+);
+
+table.innerHTML = "";
+
+users
+.filter(user=>{
+
+return (
+
+String(user.id)
+.includes(value)
+
+||
+
+user.username
+.toLowerCase()
+.includes(value)
+
+);
+
+})
+
+.forEach(user=>{
+
+table.innerHTML += `
+
+<tr>
+
+<td>${user.id}</td>
+
+<td>${user.username}</td>
+
+<td>${user.balance}</td>
+
+<td>${user.spins || 0}</td>
+
+<td>${user.ip || "-"}</td>
+
+<td>
+
+<button
+onclick="openUser(${user.id})">
+
+Yönet
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+// ===============================
+// USER PANEL
+// ===============================
+
+function openUser(id){
+
+const user =
+users.find(
+u=>u.id == id
+);
+
+if(!user) return;
+
+const action =
+prompt(
+
+`${user.username}
+
+1 = Coin Ver
+2 = Spin Ver
+3 = Banla`
+
+);
+
+if(action === "1"){
+
+const amount =
+parseInt(
+prompt("Coin:")
+);
+
+user.balance += amount;
+
+saveUsers();
+
+addLog(
+`+${amount} coin verildi -> ${user.username}`
+);
+
+toast("Coin eklendi");
+
+}
+
+if(action === "2"){
+
+const amount =
+parseInt(
+prompt("Spin:")
+);
+
+user.spins =
+(user.spins || 0)
++ amount;
+
+saveUsers();
+
+addLog(
+`+${amount} spin verildi -> ${user.username}`
+);
+
+toast("Spin eklendi");
+
+}
+
+if(action === "3"){
+
+user.banned = true;
+
+saveUsers();
+
+addLog(
+`${user.username} banlandı`
+);
+
+toast("Kullanıcı banlandı");
+
+}
+
+loadUsers();
+
+}
+
+// ===============================
+// SAVE
+// ===============================
 
 function saveUsers(){
 
-    localStorage.setItem(
-        "nexus_users",
-        JSON.stringify(users)
-    );
+localStorage.setItem(
+"users",
+JSON.stringify(users)
+);
 
 }
 
-function saveLogs(){
+// ===============================
+// LOGS
+// ===============================
 
-    localStorage.setItem(
-        "nexus_logs",
-        JSON.stringify(logs)
-    );
+function addLog(text){
 
-}
+logs.unshift({
 
-function saveNotifications(){
+date:new Date()
+.toLocaleString(),
 
-    localStorage.setItem(
-        "nexus_notifications",
-        JSON.stringify(notifications)
-    );
+text:text
 
-}
+});
 
-/* ==========================
-   LOG SYSTEM
-========================== */
+localStorage.setItem(
+"adminLogs",
+JSON.stringify(logs)
+);
 
-function addLog(message){
-
-    const log = {
-
-        date:new Date().toLocaleString(),
-
-        message:message
-
-    };
-
-    logs.unshift(log);
-
-    if(logs.length > 500){
-
-        logs = logs.slice(0,500);
-
-    }
-
-    saveLogs();
-
-    renderLogs();
+renderLogs();
 
 }
-
-/* ==========================
-   SIDEBAR
-========================== */
-
-function showSection(id){
-
-    document
-    .querySelectorAll(".section")
-    .forEach(section=>{
-
-        section.classList.remove("active");
-
-    });
-
-    document
-    .getElementById(id)
-    .classList.add("active");
-
-    document
-    .querySelectorAll(".menu-btn")
-    .forEach(btn=>{
-
-        btn.classList.remove("active");
-
-    });
-
-    event.target.classList.add("active");
-
-    document.getElementById(
-        "pageTitle"
-    ).innerText =
-    event.target.innerText;
-
-}
-
-/* ==========================
-   DASHBOARD
-========================== */
-
-function loadDashboard(){
-
-    document.getElementById(
-        "totalUsers"
-    ).innerText =
-    users.length;
-
-    let totalCoins = 0;
-
-    let totalSpins = 0;
-
-    users.forEach(user=>{
-
-        totalCoins += Number(
-            user.coins || 0
-        );
-
-        totalSpins += Number(
-            user.spinRights ||
-            user.spins ||
-            0
-        );
-
-    });
-
-    document.getElementById(
-        "totalCoins"
-    ).innerText =
-    totalCoins.toLocaleString();
-
-    document.getElementById(
-        "totalSpins"
-    ).innerText =
-    totalSpins.toLocaleString();
-
-    document.getElementById(
-        "todayLogins"
-    ).innerText =
-    logs.length;
-
-}
-
-/* ==========================
-   USERS
-========================== */
-
-function renderUsers(){
-
-    const table =
-    document.getElementById(
-        "userTable"
-    );
-
-    if(!table) return;
-
-    const search =
-    document.getElementById(
-        "userSearch"
-    ).value.toLowerCase();
-
-    table.innerHTML = "";
-
-    users
-    .filter(user=>{
-
-        return user.username
-        ?.toLowerCase()
-        .includes(search);
-
-    })
-    .forEach(user=>{
-
-        table.innerHTML += `
-
-        <tr>
-
-            <td>${user.id || "-"}</td>
-
-            <td>${user.username}</td>
-
-            <td>${user.coins || 0}</td>
-
-            <td>
-
-            ${
-                user.spinRights ||
-                user.spins ||
-                0
-            }
-
-            </td>
-
-            <td>
-
-            ${
-                user.banned
-                ? "🚫 BAN"
-                : "✅ AKTİF"
-            }
-
-            </td>
-
-            <td>
-
-                <button
-                class="action-btn coin-btn"
-                onclick="addCoin(${user.id})">
-
-                +Coin
-
-                </button>
-
-                <button
-                class="action-btn edit-btn"
-                onclick="addSpin(${user.id})">
-
-                +Spin
-
-                </button>
-
-                <button
-                class="action-btn ban-btn"
-                onclick="toggleBan(${user.id})">
-
-                Ban
-
-                </button>
-
-            </td>
-
-        </tr>
-
-        `;
-
-    });
-
-}
-
-/* ==========================
-   COIN
-========================== */
-
-function addCoin(id){
-
-    let amount =
-    Number(
-        prompt(
-            "Eklenecek coin miktarı:"
-        )
-    );
-
-    if(!amount) return;
-
-    const user =
-    users.find(
-        u=>u.id===id
-    );
-
-    if(!user) return;
-
-    user.coins =
-    Number(user.coins || 0)
-    + amount;
-
-    saveUsers();
-
-    renderUsers();
-
-    loadDashboard();
-
-    addLog(
-        `${user.username}
-        kullanıcısına
-        ${amount}
-        coin eklendi`
-    );
-
-}
-
-/* ==========================
-   SPIN
-========================== */
-
-function addSpin(id){
-
-    let amount =
-    Number(
-        prompt(
-            "Verilecek spin hakkı:"
-        )
-    );
-
-    if(!amount) return;
-
-    const user =
-    users.find(
-        u=>u.id===id
-    );
-
-    if(!user) return;
-
-    user.spinRights =
-    Number(
-        user.spinRights || 0
-    ) + amount;
-
-    saveUsers();
-
-    renderUsers();
-
-    loadDashboard();
-
-    addLog(
-        `${user.username}
-        kullanıcısına
-        ${amount}
-        spin verildi`
-    );
-
-}
-
-/* ==========================
-   BAN SYSTEM
-========================== */
-
-function toggleBan(id){
-
-    const user =
-    users.find(
-        u=>u.id===id
-    );
-
-    if(!user) return;
-
-    user.banned =
-    !user.banned;
-
-    saveUsers();
-
-    renderUsers();
-
-    addLog(
-
-        `${user.username}
-
-        hesabı
-
-        ${user.banned
-        ? "banlandı"
-        : "ban kaldırıldı"}`
-
-    );
-
-}
-
-/* ==========================
-   NOTIFICATION
-========================== */
-
-function sendNotification(){
-
-    const text =
-    document
-    .getElementById(
-        "notificationText"
-    )
-    .value
-    .trim();
-
-    if(!text){
-
-        alert(
-            "Bildirim boş olamaz"
-        );
-
-        return;
-
-    }
-
-    notifications.unshift({
-
-        date:new Date()
-        .toLocaleString(),
-
-        text:text
-
-    });
-
-    saveNotifications();
-
-    document.getElementById(
-        "notificationText"
-    ).value="";
-
-    addLog(
-        "Yeni bildirim gönderildi"
-    );
-
-    alert(
-        "Bildirim gönderildi"
-    );
-
-}
-
-/* ==========================
-   LOGS
-========================== */
 
 function renderLogs(){
 
-    const container =
-    document.getElementById(
-        "logContainer"
-    );
+const container =
+document.getElementById(
+"logsContainer"
+);
 
-    if(!container) return;
+if(!container) return;
 
-    container.innerHTML = "";
+container.innerHTML = "";
 
-    logs.forEach(log=>{
+logs.forEach(log=>{
 
-        container.innerHTML += `
+container.innerHTML += `
 
-        <div class="log-item">
+<div
+style="
+padding:15px;
+margin-bottom:10px;
+background:#182338;
+border-radius:12px;
+">
 
-            <strong>
+<strong>
 
-            ${log.date}
+${log.date}
 
-            </strong>
+</strong>
 
-            <br><br>
+<br>
 
-            ${log.message}
+${log.text}
 
-        </div>
+</div>
 
-        `;
+`;
 
-    });
-
-}
-
-/* ==========================
-   LOGOUT
-========================== */
-
-function logout(){
-
-    if(
-        confirm(
-            "Çıkış yapmak istiyor musun?"
-        )
-    ){
-
-        localStorage.removeItem(
-            "nexus_admin"
-        );
-
-        location.href =
-        "index.html";
-
-    }
+});
 
 }
 
-/* ==========================
-   INIT
-========================== */
+// ===============================
+// SESSIONS
+// ===============================
 
-loadData();
+function loadSessions(){
 
-loadDashboard();
+const table =
+document.getElementById(
+"sessionTable"
+);
 
-renderUsers();
+if(!table) return;
+
+table.innerHTML = "";
+
+users.forEach(user=>{
+
+table.innerHTML += `
+
+<tr>
+
+<td>${user.username}</td>
+
+<td>${user.ip || "-"}</td>
+
+<td>TR</td>
+
+<td>Chrome</td>
+
+<td>Online</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+// ===============================
+// DEMO DATA
+// ===============================
+
+function createDemoUsers(){
+
+if(users.length > 0)
+return;
+
+users = [
+
+{
+id:1,
+username:"admin",
+balance:100000,
+spins:999,
+role:"admin",
+ip:"127.0.0.1"
+},
+
+{
+id:2,
+username:"test",
+balance:2500,
+spins:15,
+role:"user",
+ip:"185.10.25.11"
+},
+
+{
+id:3,
+username:"player1",
+balance:5000,
+spins:30,
+role:"user",
+ip:"95.125.88.15"
+}
+
+];
+
+saveUsers();
+
+}
+
+// ===============================
+// STATS
+// ===============================
+
+function loadStats(){
+
+const statCards =
+document.querySelectorAll(
+".stat-card h3"
+);
+
+if(statCards.length < 6)
+return;
+
+const totalUsers =
+users.length;
+
+const totalCoins =
+users.reduce(
+
+(a,b)=>
+
+a + (b.balance || 0),
+
+0
+
+);
+
+const totalSpins =
+users.reduce(
+
+(a,b)=>
+
+a + (b.spins || 0),
+
+0
+
+);
+
+statCards[0].innerText =
+totalUsers;
+
+statCards[1].innerText =
+Math.floor(
+totalUsers * 0.65
+);
+
+statCards[2].innerText =
+totalCoins;
+
+statCards[3].innerText =
+totalSpins;
+
+statCards[4].innerText =
+Math.floor(
+Math.random()*500
+);
+
+statCards[5].innerText =
+Math.floor(
+Math.random()*100
+);
+
+}
+
+// ===============================
+// SEARCH BUTTON
+// ===============================
+
+document
+.addEventListener(
+"click",
+e=>{
+
+if(
+e.target.innerText
+.includes("Ara")
+){
+
+searchUsers();
+
+}
+
+}
+);
+
+// ===============================
+// INIT
+// ===============================
+
+createDemoUsers();
+
+loadUsers();
 
 renderLogs();
+
+loadSessions();
+
+loadStats();
+
+console.log(
+"NEXUS V6 ADMIN READY"
+);
